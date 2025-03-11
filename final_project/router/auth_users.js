@@ -63,12 +63,26 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
             filtered_book['reviews'][reviewer] = review;
             books[isbn]=filtered_book;
         }
-        res.send(`The review for the book with ISBN ${isbn} has updated.`);
+        res.send(`The review for the book with ISBN ${isbn} has been updated.`);
     } else {
         res.send('Unable to find this ISBN!');
     }
 });
 
+// Delete book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn;
+    let filtered_review = books[isbn]["reviews"];
+    if (filtered_review){
+        let reviewer = req.session.authorization['username'];
+        if (filtered_review) {
+            delete filtered_review[reviewer];
+        }
+        res.send(`The review for the book with ISBN ${isbn} has been deleted.`);
+    } else {
+        res.send('Unable to find this ISBN!');
+    }
+});
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
