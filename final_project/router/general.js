@@ -68,4 +68,48 @@ public_users.get('/review/:isbn',function (req, res) {
 res.send(books[isbn]["reviews"]);
 });
 
+
+// Get the book list available in the shop using async-await
+public_users.get('/', async function (req, res) {
+    res.send(JSON.stringify(books, null, 4));
+});
+// Get book details based on ISBN using async-await
+public_users.get('/isbn/:isbn', async function (req, res) {
+    const isbn = req.params.isbn;
+    res.send(books[isbn]);
+});
+// Get book details based on author using async-await
+public_users.get('/author/:author', async function (req, res) {
+    let booksbyauthor = [];
+    let isbns = Object.keys(books);
+
+    for (let isbn of isbns) {
+        if (books[isbn]["author"] === req.params.author) {
+            booksbyauthor.push({
+                "isbn": isbn,
+                "title": books[isbn]["title"],
+                "reviews": books[isbn]["reviews"]
+            });
+        }
+    }
+
+    res.send(JSON.stringify({ booksbyauthor }, null, 4));
+});
+// Get all books based on title using async-await
+public_users.get('/title/:title', async function (req, res) {
+    let booksbytitle = [];
+    let isbns = Object.keys(books);
+
+    for (let isbn of isbns) {
+        if (books[isbn]["title"] === req.params.title) {
+            booksbytitle.push({
+                "isbn": isbn,
+                "author": books[isbn]["author"],
+                "reviews": books[isbn]["reviews"]
+            });
+        }
+    }
+
+    res.send(JSON.stringify({ booksbytitle }, null, 4));
+});
 module.exports.general = public_users;
